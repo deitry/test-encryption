@@ -7,9 +7,39 @@ public class Tests
     {
     }
 
-    [Test]
-    public void Test1()
+    public string Encrypt(string str)
     {
-        Assert.Pass();
+        var result = string.Empty;
+
+        for (var i = 0; i < str.Length - 1; i += 2)
+        {
+            result += str[i + 1];
+            result += str[i];
+        }
+
+        if (str.Length % 2 == 1)
+            result += str.Last();
+
+        return result;
+    }
+
+    [Test]
+    [TestCase("move", "omev")]
+    [TestCase("attackattack", "taatkctaatkc")]
+    [TestCase("attack", "taatkc")]
+    [TestCase("attack!attack!!", "taatkca!ttca!k!")]
+    [TestCase("go!", "og!")]
+    [TestCase("go", "og")]
+    [TestCase("o", "o")]
+    [TestCase("", "")]
+    public void Test1(string original, string expected)
+    {
+        var encrypted = Encrypt(original);
+
+        Assert.That(encrypted, Is.EqualTo(expected));
+
+        var decrypted = Encrypt(encrypted);
+
+        Assert.That(decrypted, Is.EqualTo(original));
     }
 }
